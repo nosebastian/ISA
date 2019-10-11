@@ -171,7 +171,7 @@ int dns_header::encode(void * buffer, std::size_t max_size)
     
     return offset;
 }
-int dns_header::decode(void * buffer, std::size_t size)
+int dns_header::decode(void *buffer_start, void * buffer, std::size_t size)
 {
     if(size < sizeof(_buffer))
         return -1;

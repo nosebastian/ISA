@@ -23,11 +23,12 @@ public:
     virtual int encode(void * buffer, std::size_t max_size) = 0;
     /**
      * Method used for updating class properties from data in network byte order stored in buffer
+     * @param buffer_start Pointer to start of buffered packet
      * @param buffer Pointer to buffer of network data
      * @param size Size of buffered data
      * @return size of data read from buffer. If enetered size of buffered data is too small to update all necesary parameters -1 is returned.
      */
-    virtual int decode(void * buffer, std::size_t size) = 0;
+    virtual int decode(void *buffer_start, void * buffer, std::size_t size) = 0;
     network_data();
     ~network_data();
 };

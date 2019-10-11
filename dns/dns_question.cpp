@@ -28,7 +28,7 @@ int dns_question::encode(void * buffer, std::size_t max_size)
 
     return offset;
 }
-int dns_question::decode(void * buffer, std::size_t size)
+int dns_question::decode(void *buffer_start, void * buffer, std::size_t size)
 {
 }
 dns_question::dns_question(char *_name, dns_type_t _type, dns_class_t _class)

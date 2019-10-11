@@ -5,7 +5,7 @@ int dns_resource_record::encode(void * buffer, std::size_t max_size)
 {
 
 }
-int dns_resource_record::decode(void * buffer, std::size_t size)
+int dns_resource_record::decode(void *buffer_start, void * buffer, std::size_t size)
 {
 
 }

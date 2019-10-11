@@ -29,9 +29,39 @@ int dns_subdomain::encode(void * buffer, std::size_t max_size)
 
     return offset;
 }
-int dns_subdomain::decode(void * buffer, std::size_t size)
+int dns_subdomain::decode(void *buffer_start, void * buffer, std::size_t size)
 {
+    char current_char;
+    uint8_t current_count;
+    std::string current_label;
+    size_t i;
+    
+    for(i = 0; i < size && current_count != 0; i++)
+    {
+        current_count = current_char = (static_cast<uint8_t *>(buffer))[i];
+        i++;
 
+        if(current_char == 0xC0)
+        {
+            //pointer
+        }
+
+        for (int j = 0; j < current_count && i < size; i++, j++)
+        {
+            current_char = (static_cast<char *>(buffer))[i];
+            if(current_char == '\0')
+                //INPUT DATA ERROR;
+            current_label.push_back(current_char);
+        }
+        if(current_count != 0)
+        {
+            _labels.push_back(current_label);
+            current_label.clear();
+        }
+        else
+            return i;
+    }
+    return -1;
 }
 
 dns_subdomain::dns_subdomain(const char *name)
@@ -164,23 +194,6 @@ dns_subdomain::dns_subdomain(const char *name)
     {
         //ERROR
     }
-    
-
-
-/*     std::string name_copy(name);
-    
-    for (size_t i = 0; i < max_size; i++)
-    {
-        if(name_copy[i] == '.')
-            name_copy[i] = '\0';
-    }
-    for (size_t i = 0; i < max_size;)
-    {
-        std::string label(&name_copy[i]);
-        i += label.length() + 1;
-        _labels.push_back(label);
-    }
- */    
 }
 
 dns_subdomain::dns_subdomain()

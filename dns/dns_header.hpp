@@ -30,7 +30,7 @@ public:
     void createQueryHeader();
 
     virtual int encode(void * buffer, std::size_t max_size);
-    virtual int decode(void * buffer, std::size_t size);
+    virtual int decode(void *buffer_start, void * buffer, std::size_t size);
     dns_header();
     ~dns_header();
 };

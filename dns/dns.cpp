@@ -25,7 +25,7 @@ int dns::encode(void * buffer, std::size_t max_size)
     }
 
 }
-int dns::decode(void * buffer, std::size_t size)
+int dns::decode(void *buffer_start, void * buffer, std::size_t size)
 {
     
 }
