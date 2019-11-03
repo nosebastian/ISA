@@ -9,6 +9,7 @@
             "command": "/usr/bin/make",
             "group": "build",
             "args": [
+                "-C",
                 "${workspaceFolder}",
                 "-j4",
             ]

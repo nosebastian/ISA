@@ -8,7 +8,6 @@ class dns_header : network_data
 {
 private:
     uint16_t _flags;
-    uint8_t _buffer[DNS_HEADER_SIZE];
     void _encodeFlags();
     void _decodeFlags();
 public:
@@ -27,10 +26,8 @@ public:
     uint16_t nameserver_count;
     uint16_t additional_count;
 
-    void createQueryHeader();
-
-    virtual int encode(void * buffer, std::size_t max_size);
-    virtual int decode(void *buffer_start, void * buffer, std::size_t size);
+    virtual int encode(uint8_t * buffer, std::size_t max_size);
+    virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
     dns_header();
     ~dns_header();
 };

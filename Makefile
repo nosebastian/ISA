@@ -3,7 +3,7 @@ CFLAGS=-g -std=c++11
 LDFLAGS=
 
 
-main: main.o network_data.o dns/dns.o dns/dns_header.o dns/dns_question.o dns/dns_rdata.o dns/dns_resource_record.o dns/dns_subdomain.o
+main: main.o network_data.o dns/dns.o dns/dns_header.o dns/dns_question.o dns/dns_rdata.o dns/dns_resource_record.o dns/dns_subdomain.o arguments.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
 %.o: %.cpp
@@ -13,6 +13,7 @@ main: main.o network_data.o dns/dns.o dns/dns_header.o dns/dns_question.o dns/dn
 main.cpp: network_data.hpp dns/dns.hpp
 
 network_data.cpp: %.cpp : %.hpp
+arguments.cpp: %.cpp : %.hpp
 
 dns/dns.cpp:  %.cpp : %.hpp
 dns/dns_header.cpp:  %.cpp : %.hpp

@@ -58,6 +58,10 @@ typedef enum {
     DNS_Q_MAILB         = 253, //A request for mailbox-related records (MB, MG or MR)
     DNS_Q_MAILA         = 254, //A request for mail agent RRs (Obsolete - see MX)
     DNS_Q_ALL           = 255, //A request for all records
+
+    // For an unknown type
+
+    DNS_UNKNOWN          = 127,
 } dns_type_t;
 
 /**

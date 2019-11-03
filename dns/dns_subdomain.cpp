@@ -1,7 +1,7 @@
 #include "dns_subdomain.hpp"
 
 
-int dns_subdomain::encode(void * buffer, std::size_t max_size)
+int dns_subdomain::encode(uint8_t * buffer, std::size_t max_size)
 {
     size_t offset = 0;
     size_t current_max_size = max_size;
@@ -29,28 +29,28 @@ int dns_subdomain::encode(void * buffer, std::size_t max_size)
 
     return offset;
 }
-int dns_subdomain::decode(void *buffer_start, void * buffer, std::size_t size)
+int dns_subdomain::decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size)
 {
-    char current_char;
+    unsigned char current_char;
     uint8_t current_count;
     std::string current_label;
     size_t i;
     
     for(i = 0; i < size && current_count != 0; i++)
     {
-        current_count = current_char = (static_cast<uint8_t *>(buffer))[i];
+        current_count = current_char = (buffer)[i];
         i++;
 
         if(current_char == 0xC0)
         {
-            //pointer
+            
         }
 
         for (int j = 0; j < current_count && i < size; i++, j++)
         {
-            current_char = (static_cast<char *>(buffer))[i];
+            current_char = buffer[i];
             if(current_char == '\0')
-                //INPUT DATA ERROR;
+                return -1;
             current_label.push_back(current_char);
         }
         if(current_count != 0)

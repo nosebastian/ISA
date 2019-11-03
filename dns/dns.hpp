@@ -19,8 +19,8 @@ private:
 public:
     dns_header header;
     void addQuestion(std::string &_name, dns_type_t _type, dns_class_t _class);
-    virtual int encode(void * buffer, std::size_t max_size);
-    virtual int decode(void *buffer_start, void * buffer, std::size_t size);
+    virtual int encode(uint8_t * buffer, std::size_t max_size);
+    virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
     dns();
     ~dns();
 };

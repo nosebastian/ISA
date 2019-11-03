@@ -8,10 +8,14 @@ class dns_resource_record : network_data
 {
 private:
 public:
-    //std::variant<dns_rData_A, dns_rData_AAAA, dns_rData_CNAME, dns_rData_HINFO, dns_rData_MX, dns_rData_NS> rData;
-    
-    virtual int encode(void * buffer, std::size_t max_size);
-    virtual int decode(void *buffer_start, void * buffer, std::size_t size);
+    dns_type_t type;
+    dns_type_t rclass;
+    uint16_t length;
+    uint16_t time_to_live;
+
+
+    virtual int encode(uint8_t * buffer, std::size_t max_size);
+    virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
     dns_resource_record();
     ~dns_resource_record();
 };

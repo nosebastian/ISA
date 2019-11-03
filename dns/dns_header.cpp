@@ -62,7 +62,7 @@ void dns_header::_encodeFlags()
 }
 void dns_header::_decodeFlags()
 {
-    is_response = _flags & 0x8000 == 0x8000;
+    is_response = (_flags & 0x8000) == 0x8000;
     switch (_flags & 0x7800)
     {
     case 0x0000:
@@ -80,10 +80,10 @@ void dns_header::_decodeFlags()
         break;
     }
 
-    is_authoritative_answer = _flags & 0x0400 == 0x0400;
-    is_truncated = _flags & 0x0200 == 0x0200;
-    recursion_desired = _flags & 0x0100 == 0x0100;
-    recursion_available = _flags & 0x0080 == 0x0080;
+    is_authoritative_answer = (_flags & 0x0400) == 0x0400;
+    is_truncated = (_flags & 0x0200) == 0x0200;
+    recursion_desired = (_flags & 0x0100) == 0x0100;
+    recursion_available = (_flags & 0x0080) == 0x0080;
     
     switch (_flags & 0x000f)
     {
@@ -112,11 +112,7 @@ void dns_header::_decodeFlags()
     }
 }
 
-void dns_header::createQueryHeader()
-{
-    
-}
-int dns_header::encode(void * buffer, std::size_t max_size)
+int dns_header::encode(uint8_t * buffer, std::size_t max_size)
 {
     /*
                                     1  1  1  1  1  1
@@ -135,76 +131,73 @@ int dns_header::encode(void * buffer, std::size_t max_size)
     |                    ARCOUNT                    |
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+ 
     */
-    if(max_size < sizeof(_buffer))
+    if(max_size < DNS_HEADER_SIZE)
         return -1;
 
-    memset(buffer, 0, sizeof(_buffer));
+    memset(buffer, 0, DNS_HEADER_SIZE);
     _encodeFlags();
 
     size_t offset = 0;
 
     uint16_t htonsData = htons(id);
-    memcpy(buffer + offset, &htonsData, sizeof(uint16_t));
+    memcpy(&buffer[offset], &htonsData, sizeof(uint16_t));
     offset += sizeof(uint16_t);
 
     htonsData = htons(_flags);
-    memcpy(buffer + offset, &htonsData, sizeof(uint16_t));
+    memcpy(&buffer[offset], &htonsData, sizeof(uint16_t));
     offset += sizeof(uint16_t);
 
     htonsData = htons(question_count);
-    memcpy(buffer + offset, &htonsData, sizeof(uint16_t));
+    memcpy(&buffer[offset], &htonsData, sizeof(uint16_t));
     offset += sizeof(uint16_t);
 
     htonsData = htons(answer_count);
-    memcpy(buffer + offset, &htonsData, sizeof(uint16_t));
+    memcpy(&buffer[offset], &htonsData, sizeof(uint16_t));
     offset += sizeof(uint16_t);
 
     htonsData = htons(nameserver_count);
-    memcpy(buffer + offset, &htonsData, sizeof(uint16_t));
+    memcpy(&buffer[offset], &htonsData, sizeof(uint16_t));
     offset += sizeof(uint16_t);
 
     htonsData = htons(additional_count);
-    memcpy(buffer + offset, &htonsData, sizeof(uint16_t));
+    memcpy(&buffer[offset], &htonsData, sizeof(uint16_t));
     offset += sizeof(uint16_t);
-
-    memcpy(_buffer, buffer, sizeof(_buffer));
     
     return offset;
 }
-int dns_header::decode(void *buffer_start, void * buffer, std::size_t size)
+int dns_header::decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size)
 {
-    if(size < sizeof(_buffer))
+    if(size < DNS_HEADER_SIZE)
         return -1;
 
     size_t offset = 0;
 
     uint16_t ntohsData;
 
-    memcpy(&ntohsData, buffer + offset, sizeof(uint16_t));
+    memcpy(&ntohsData, &buffer[offset], sizeof(uint16_t));
     offset += sizeof(uint16_t);
     id = ntohs(ntohsData);
 
-    memcpy(&ntohsData, buffer + offset, sizeof(uint16_t));
+    memcpy(&ntohsData, &buffer[offset], sizeof(uint16_t));
     offset += sizeof(uint16_t);
     _flags = ntohs(ntohsData);
 
-    memcpy(&ntohsData, buffer + offset, sizeof(uint16_t));
+    memcpy(&ntohsData, &buffer[offset], sizeof(uint16_t));
     offset += sizeof(uint16_t);
     question_count = ntohs(ntohsData);
 
-    memcpy(&ntohsData, buffer + offset, sizeof(uint16_t));
+    memcpy(&ntohsData, &buffer[offset], sizeof(uint16_t));
     offset += sizeof(uint16_t);
     answer_count = ntohs(ntohsData);
 
-    memcpy(&ntohsData, buffer + offset, sizeof(uint16_t));
+    memcpy(&ntohsData, &buffer[offset], sizeof(uint16_t));
     offset += sizeof(uint16_t);
     nameserver_count = ntohs(ntohsData);
 
-    memcpy(&ntohsData, buffer + offset, sizeof(uint16_t));
+    memcpy(&ntohsData, &buffer[offset], sizeof(uint16_t));
     offset += sizeof(uint16_t);
     additional_count = ntohs(ntohsData);
 
-    memcpy(_buffer, buffer, sizeof(_buffer));
     _decodeFlags();
 
     return offset;
