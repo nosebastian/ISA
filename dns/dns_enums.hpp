@@ -77,4 +77,9 @@ typedef enum {
     DNS_CLASS_Q_ANY           = 255, //any class
 } dns_class_t;
 
+const char * dns_type_to_string(dns_type_t type);
+const char * dns_class_to_string(dns_class_t dns_class);
+
+
+
 #endif

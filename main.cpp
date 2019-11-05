@@ -30,7 +30,7 @@ int main(int argc, char ** argv)
 
     int ret = getaddrinfo("8.8.4.4", "53", &hint, &result);
 
-    auto hostname2 = std::string("google.com");
+    auto hostname2 = args.lookup_hostname;
 
     datagram.header.id = 0x0F69;
     datagram.header.is_response = false;
@@ -48,11 +48,8 @@ int main(int argc, char ** argv)
     ret = connect(sock, result->ai_addr, result->ai_addrlen);
     perror("SOCK: ");
 
-
     ret = send(sock, buffer, DNS_MAX_SIZE, 0);
     perror("SOCK: ");
-
-
 
     ret = recv(sock, buffer_receive, DNS_MAX_SIZE, 0);
     perror("SOCK: ");
@@ -60,6 +57,8 @@ int main(int argc, char ** argv)
     received.decode(buffer_receive, buffer_receive, DNS_MAX_SIZE);
 
     close(sock);
+
+    std::cout << received;
 
     return 0;
 }

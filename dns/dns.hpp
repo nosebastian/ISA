@@ -23,6 +23,9 @@ public:
     virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
     dns();
     ~dns();
+
+    friend std::ostream& operator<<(std::ostream& os, const dns& data);
 };
+
 
 #endif

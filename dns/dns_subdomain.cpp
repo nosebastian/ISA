@@ -5,7 +5,7 @@ int dns_subdomain::encode(uint8_t * buffer, std::size_t max_size)
 {
     size_t offset = 0;
     size_t current_max_size = max_size;
-    for (auto &&label : _labels)
+    for (auto &&label : labels)
     {
         if (label.length() + 1 > current_max_size)
             return -1;
@@ -31,20 +31,22 @@ int dns_subdomain::encode(uint8_t * buffer, std::size_t max_size)
 }
 int dns_subdomain::decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size)
 {
-    unsigned char current_char;
-    uint8_t current_count;
+    unsigned char current_char = buffer[0];
+    uint8_t current_count = buffer[0];
     std::string current_label;
     size_t i;
+
+    if(current_char == 0xC0)
+    {
+        if( size < 2)
+            return -1;
+        return 2;
+    }
     
     for(i = 0; i < size && current_count != 0; i++)
     {
-        current_count = current_char = (buffer)[i];
+        current_count = current_char = buffer[i];
         i++;
-
-        if(current_char == 0xC0)
-        {
-            
-        }
 
         for (int j = 0; j < current_count && i < size; i++, j++)
         {
@@ -55,7 +57,7 @@ int dns_subdomain::decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t s
         }
         if(current_count != 0)
         {
-            _labels.push_back(current_label);
+            labels.push_back(current_label);
             current_label.clear();
         }
         else
@@ -73,6 +75,7 @@ dns_subdomain::dns_subdomain(const char *name)
      *    |       +---------+       |
      *    |            |            |
      *    |            | A-Z, a-z   | "."
+     *    |            | 0-9        |
      *    |            V            |
      *    |         F=====F         |
      *    |         |LABEL|---------+
@@ -92,7 +95,7 @@ dns_subdomain::dns_subdomain(const char *name)
      *     A-Z, a-z
      *     0-9
      */
-    _labels.clear();
+    labels.clear();
     std::string label("");
     
     enum {SUBDOMAIN, LABEL, HYPH, NUM_CHR, ERROR};
@@ -105,7 +108,8 @@ dns_subdomain::dns_subdomain(const char *name)
         case SUBDOMAIN:
             if(
                 (current_char >= 'A' && current_char <= 'Z') || 
-                (current_char >= 'a' && current_char <= 'z')
+                (current_char >= 'a' && current_char <= 'z') ||
+                (current_char >= '0' && current_char <= '9')
                 )
             {
                 label.push_back(current_char);
@@ -131,7 +135,7 @@ dns_subdomain::dns_subdomain(const char *name)
             }
             else if(current_char == '.')
             {
-                _labels.push_back(label);
+                labels.push_back(label);
                 label.clear();
                 state = SUBDOMAIN;
             }
@@ -155,7 +159,7 @@ dns_subdomain::dns_subdomain(const char *name)
             }
             else if(current_char == '.')
             {
-                _labels.push_back(label);
+                labels.push_back(label);
                 label.clear();
                 state = SUBDOMAIN;
             }
@@ -187,7 +191,7 @@ dns_subdomain::dns_subdomain(const char *name)
 
     if(state == LABEL || state == NUM_CHR)
     {
-        _labels.push_back(label);
+        labels.push_back(label);
         label.clear();
     }
     else
@@ -201,3 +205,15 @@ dns_subdomain::dns_subdomain()
 
 dns_subdomain::~dns_subdomain()
 {}
+
+std::ostream& operator<<(std::ostream& os, const dns_subdomain& data)
+{
+    bool is_first = true;
+    for (auto &&label : data.labels)
+    {
+        if(!is_first)
+            os << ".";    
+        os << label;
+    }
+    return os;
+}

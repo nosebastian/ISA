@@ -219,3 +219,13 @@ dns_header::dns_header()
 }
 dns_header::~dns_header()
 {}
+
+std::ostream& operator<<(std::ostream& os, const dns_header& data)
+{
+    os  
+        << "Authoritative: " << ((data.is_authoritative_answer)?"Yes":"No")
+        << ", Recursive: " << ((data.recursion_desired && data.recursion_available)?"Yes":"No")
+        <<", Truncated: " << ((data.is_truncated)?"Yes":"No")
+        << std::endl;
+    return os;
+}

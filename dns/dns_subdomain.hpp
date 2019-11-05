@@ -6,13 +6,15 @@
 class dns_subdomain : network_data
 {
 private:
-    std::vector<std::string> _labels;
 public:
+    std::vector<std::string> labels;
     virtual int encode(uint8_t * buffer, std::size_t max_size);
     virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
     dns_subdomain(const char *name);
     dns_subdomain();
     ~dns_subdomain();
+
+    friend std::ostream& operator<<(std::ostream& os, const dns_subdomain& data);
 };
 
 

@@ -24,6 +24,8 @@ public:
     dns_question(std::string &_name, dns_type_t _type, dns_class_t _class);
     dns_question();
     ~dns_question();
+    
+    friend std::ostream& operator<<(std::ostream& os, const dns_question& data);
 };
 
 

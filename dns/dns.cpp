@@ -8,7 +8,6 @@ int dns::encode(uint8_t * buffer, std::size_t max_size)
     size_t offset = 0;
     int ret = 0;
 
-
     ret = header.encode(buffer + offset, current_max_size);
     if(ret == -1)
         return -1;
@@ -31,14 +30,49 @@ int dns::decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size)
     size_t offset = 0;
     int ret = 0;
 
-
     ret = header.decode(buffer_start, buffer + offset, current_size);
     if(ret == -1)
         return -1;
     offset += ret;
     current_size -= ret;
-    
 
+    dns_question current_question;
+
+    for (size_t i = 0; i < header.question_count; i++)
+    {
+        ret = current_question.decode(buffer_start, &buffer[offset], current_size);
+        if(ret == -1)
+            return -1;
+        offset += ret;
+        current_size -= ret;
+    }
+
+    dns_resource_record current_rr;
+
+    for (size_t i = 0; i < header.answer_count; i++)
+    {
+        ret = current_rr.decode(buffer_start, &buffer[offset], current_size);
+        if(ret == -1)
+            return -1;
+        offset += ret;
+        current_size -= ret;
+    }
+    for (size_t i = 0; i < header.nameserver_count; i++)
+    {
+        ret = current_rr.decode(buffer_start, &buffer[offset], current_size);
+        if(ret == -1)
+            return -1;
+        offset += ret;
+        current_size -= ret;
+    }
+    for (size_t i = 0; i < header.additional_count; i++)
+    {
+        ret = current_rr.decode(buffer_start, &buffer[offset], current_size);
+        if(ret == -1)
+            return -1;
+        offset += ret;
+        current_size -= ret;
+    }
     return offset;
 }
 
@@ -55,6 +89,17 @@ dns::dns()
 
 dns::~dns()
 {}
+
+std::ostream& operator<<(std::ostream& os, const dns& data)
+{
+    os  << data.header
+        << "Question section (" << data.header.question_count << ")" << std::endl;
+
+    os << "Answer section (" << data.header.answer_count << ")" << std::endl;
+    os << "Authority section (" << data.header.nameserver_count << ")" << std::endl;
+    os << "Additional section (" << data.header.additional_count << ")" << std::endl;
+    return os;
+}
 
 
 

@@ -31,7 +31,7 @@ arguments::arguments(int argc, char **argv)
     bool expect_port_number = false;
     bool expect_lookup_hostname = true;
 
-    for (size_t i = 1; i < argc; i++)
+    for (int i = 1; i < argc; i++)
     {
         std::string current_argument(argv[i]);
 

@@ -37,7 +37,7 @@
                 "-s",
                 "8.8.4.4"
             ],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
