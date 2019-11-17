@@ -1,0 +1,89 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{times}
+\usepackage[utf8]{inputenc}
+\usepackage[left=2cm, top=3cm, text={17cm, 24cm}]{geometry}
+\usepackage{alltt}
+\usepackage[hidelinks]{hyperref}
+\usepackage[czech, linesnumbered]{algorithm2e}
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+
+{\Huge\textsc{FACULTY OF INFORMATION TECHNOLOGY\\BRNO UNIVERSITY OF TECHNOLOGY}}
+\vspace{\stretch{0.382}}
+
+{\LARGE  Network Applications and Network Administration (ISA)}{\Huge\\DNS resolver}
+
+\vspace{\stretch{0.618}}
+\end{center}
+{\Large \today \hfill Marek Vaško (xvasko16)}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The aim of this project was to create network aplication which is able to query DNS queries. 
+Application should support domain resolve in Ip v4 and ip v6 and reverse queries. It should 
+be able to handle A, AAAA and CNAME records. Queries are sent to server selected by user and
+server answers are then returned and formated to standart output. Client needs to support 
+comunication over UDP.
+\section{Protocol description}
+DNS protocol as described in RFC1035 is aimed to provide a mechanism for naming services. For user
+DNS is a protocol which retrieves information associated with particular domain name from a 
+database on a nameserver. Comunication between client and server goes on a port number 53. Messages
+can be sent to server using UDP or TCP datagrams. UDP datagrams are limited in size to 512 bytes if  
+data is of a larger size, flag signalizing data truncation is set. UDP datagrams are the main form
+of comunication with nameserver, but since they can be lost during their route thus are unreliable, 
+retransmission policy should be apppliad in case of no response. Comunication over TCP protocol 
+although possible is not considered in this scenario.
+\subsection{Datagram description}
+Single datagram can be divided into several parts which can then be implemented into their separate 
+modules. Parts include header, questions section, answers section, authorities section and additionals
+section. These parts are serialized in the same order as described. Different parts of datagram consist
+of other subparts which are questions for section questions and resource records for sections answers, 
+authorities and additionals.
+\subsubsection{Header}
+Header section coitains information about dns query identification number, whenever message is response or query, opcode,
+whenever message is authoritative answer (responding nameserver is authority), whenever message is truncated,
+whenever client wishes to use recursion (recursion desired), whenever recursive queries are available on server,
+response code (information about what error occured if it occured zero if not), questions count, answers count,
+authoritative answers count and additional answers count.
+\subsubsection{Question}
+Question is format presented in questions section, single question section may contain multiple questions. Content of
+question siglanazes to server what information is client asking for and for what hostname. First question field is the
+what hostname part, this part is domain name represented by sequence of labels format of which is described in a later 
+section of this document. Domain name is being used for standard forward lookup whel its content is domain name of server. 
+It is also used for reverse DNS lookup via PTR record when in case of IPv4 it contains addres represented by sequence 
+of 4 decimal numbers form 0 to 255, representing reverse representation of ip addres, followed by .in-addr.arpa. In case of
+reverse lookup of IPv6 addres content of domain name is series of hexadecimal values from 0 to F, each representing 4 bites of
+addres in reverse order separated by dots followed by .ip6.arpa. Other section of question contain question type of questio
+(what record type is client asking for form server) and question class (information describing what class of records should server 
+search for ie. Internet class).
+\subsubsection{Resource record}
+Resource record is used to represent responses of DNS server. First field describes what domain name does this record belong to.
+And is in same format as domain names in DNS question. Other fields include type of resource record which is similiar to type of
+question but exclude options like all records (more info can be found in RFC1035), class of resource record once again similiar to
+class of question but excludes some options, time to live which signifies time of record expiration in seconds, length of resource 
+data (rdata) and resource data itself. Resource data has specific form for every type of record. Resource data structures interesting
+for our implementation are CNAME, A and AAAA. CNAME contains only domain name and its length is variable. A record contains IPv4 address
+in binary form with length of 4 bytes. AAAA resord contains IPv6 address in binary form with lenght of 16 bytes.
+\subsubsection{Domain name}
+Domain name representation is used by multiple parts of DNS protocol, thus it can be considered its own structure. Domain names in DNS
+are represented by sequence of labels. Each label begins with one byte which tells length of this label, next follow specified number of 
+characters of specified count. The end of domain name is represented by zero byte. Labels represent different parts of domain name (subdomains),
+each part separated by dot is considered label. Order of labels is the same as for subdomains order in domain name. Pointer is special case of 
+domain name representation. Pointer is signalized by first 2 bites being ones (eg. 0xc0 is pointer), value of poiter is then stored in next 6 bits 
+of first byte and the value of second byte. Poiter is refference position from start of a datagram.
+\section{Application architecture}
+
+\section{Application compilation}
+\section{Application usage}
+
+\section{Comertialy available resolvers}
+
+
+
+\end{document}

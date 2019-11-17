@@ -12,20 +12,22 @@
 class dns_question : network_data
 {
 private:
-    dns_subdomain _subdomain;
 public:
+    dns_subdomain subdomain;
     std::string name;
     dns_type_t qtype;
     dns_class_t qclass;
 
     virtual int encode(uint8_t * buffer, std::size_t max_size);
-    virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
+    virtual int decode(const uint8_t *buffer_start, const uint8_t * buffer, std::size_t size);
     dns_question(char *_name, dns_type_t _type, dns_class_t _class);
     dns_question(std::string &_name, dns_type_t _type, dns_class_t _class);
     dns_question();
     ~dns_question();
     
     friend std::ostream& operator<<(std::ostream& os, const dns_question& data);
+
+    bool operator==(const dns_question& op2);
 };
 
 

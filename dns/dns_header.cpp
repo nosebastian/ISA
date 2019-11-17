@@ -165,7 +165,7 @@ int dns_header::encode(uint8_t * buffer, std::size_t max_size)
     
     return offset;
 }
-int dns_header::decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size)
+int dns_header::decode(const uint8_t *buffer_start, const uint8_t * buffer, std::size_t size)
 {
     if(size < DNS_HEADER_SIZE)
         return -1;
@@ -229,3 +229,34 @@ std::ostream& operator<<(std::ostream& os, const dns_header& data)
         << std::endl;
     return os;
 }
+
+bool dns_header::operator==(const dns_header &op2)
+{
+    if(id != op2.id)
+        return false;
+    if(is_response != op2.is_response)
+        return false;
+    if(opcode != op2.opcode)
+        return false;
+    if(is_authoritative_answer != op2.is_authoritative_answer)
+        return false;
+    if(is_truncated != op2.is_truncated)
+        return false;
+    if(recursion_desired != op2.recursion_desired)
+        return false;
+    if(recursion_available != op2.recursion_available)
+        return false;
+    if(response_code != op2.response_code)
+        return false;
+    if(question_count != op2.question_count)
+        return false;
+    if(answer_count != op2.answer_count)
+        return false;
+    if(nameserver_count != op2.nameserver_count)
+        return false;
+    if(additional_count != op2.additional_count)
+        return false;
+    return true;
+}
+
+

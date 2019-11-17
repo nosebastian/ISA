@@ -20,11 +20,13 @@ public:
     dns_header header;
     void addQuestion(std::string &_name, dns_type_t _type, dns_class_t _class);
     virtual int encode(uint8_t * buffer, std::size_t max_size);
-    virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
+    virtual int decode(const uint8_t *buffer_start, const uint8_t * buffer, std::size_t size);
     dns();
     ~dns();
 
     friend std::ostream& operator<<(std::ostream& os, const dns& data);
+
+    bool operator==(const dns& op2);
 };
 
 

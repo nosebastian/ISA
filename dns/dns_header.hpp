@@ -27,11 +27,13 @@ public:
     uint16_t additional_count;
 
     virtual int encode(uint8_t * buffer, std::size_t max_size);
-    virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
+    virtual int decode(const uint8_t *buffer_start, const uint8_t * buffer, std::size_t size);
     dns_header();
     ~dns_header();
 
     friend std::ostream& operator<<(std::ostream& os, const dns_header& data);
+
+    bool operator==(const dns_header& op2);
 };
 
 

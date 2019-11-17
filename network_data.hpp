@@ -28,7 +28,7 @@ public:
      * @param size Size of buffered data
      * @return size of data read from buffer. If enetered size of buffered data is too small to update all necesary parameters -1 is returned.
      */
-    virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size) = 0;
+    virtual int decode(const uint8_t *buffer_start, const uint8_t * buffer, std::size_t size) = 0;
     network_data();
     ~network_data();
 };

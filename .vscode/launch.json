@@ -33,7 +33,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/main",
             "args": [
-                "google.com",
+                "::21",
                 "-s",
                 "8.8.4.4"
             ],

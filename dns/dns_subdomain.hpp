@@ -9,12 +9,13 @@ private:
 public:
     std::vector<std::string> labels;
     virtual int encode(uint8_t * buffer, std::size_t max_size);
-    virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
+    virtual int decode(const uint8_t *buffer_start, const uint8_t * buffer, std::size_t size);
     dns_subdomain(const char *name);
     dns_subdomain();
     ~dns_subdomain();
 
     friend std::ostream& operator<<(std::ostream& os, const dns_subdomain& data);
+    bool operator==(const dns_subdomain& op2);
 };
 
 

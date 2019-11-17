@@ -15,14 +15,20 @@ public:
     uint32_t ttl;
     std::vector<uint8_t> rdata;
 
+    dns_subdomain CNAME_subdomain;
+    uint8_t A[4];
+    uint8_t AAAA[16];
+
     virtual int encode(uint8_t * buffer, std::size_t max_size);
-    virtual int decode(uint8_t *buffer_start, uint8_t * buffer, std::size_t size);
+    virtual int decode(const uint8_t *buffer_start, const uint8_t * buffer, std::size_t size);
     dns_resource_record();
     ~dns_resource_record();
 
-    void format_rdata(std::ostream& os);
+    static std::ostream& format_rdata(const dns_resource_record& data, std::ostream& os);
 
-    friend std::ostream& operator<<(std::ostream& os, dns_resource_record& data);
+    friend std::ostream& operator<<(std::ostream& os, const dns_resource_record& data);
+
+    bool operator==(const dns_resource_record &op2);
 };
 
 

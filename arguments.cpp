@@ -5,13 +5,13 @@ void arguments::_parse_lookup_hostname()
 {
     lookup_type = ARGUMENT_DOMAIN;
     int ret = inet_pton(AF_INET, lookup_hostname.c_str(), address);
-    if (ret == 0)
+    if (ret == 1)
     {
         lookup_type = ARGUMENT_IP_V4;
         return;
     }
     ret = inet_pton(AF_INET6, lookup_hostname.c_str(), address);
-    if (ret == 0)
+    if (ret == 1)
     {
         lookup_type = ARGUMENT_IP_V6;
         return;
@@ -87,6 +87,7 @@ arguments::arguments(int argc, char **argv)
     {
         port_number = "53";
     }
+    _parse_lookup_hostname();
 }
 
 arguments::~arguments()
